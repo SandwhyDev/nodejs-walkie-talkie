@@ -12,11 +12,13 @@ const handleWakieTalkie = (socket, io) => {
 
     socket.removeAllListeners("audioMessage"); // Menghapus listener sebelumnya
 
-    socket.on("audioMessage", (room, user) => {
-      console.log("room id ", room);
-      console.log("audio message", room, user);
+    socket.on("audioMessage", (data, room) => {
+      // console.log("room id ", room);
+      console.log(room, data);
 
-      socket.broadcast.to(room).emit("audioFinal", `ini dari user ${user}`);
+      // console.log(room);
+
+      socket.broadcast.to(room).emit("audioFinal", ` ${data}`);
     });
 
     socket.on("user-out-room", (userOut, idRoom) => {
