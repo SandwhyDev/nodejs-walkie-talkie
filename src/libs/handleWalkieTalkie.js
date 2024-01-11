@@ -1,31 +1,49 @@
-// const userCountsByRoom = {};
+const usersInRoom = {};
+
+const JOIN_ROOM_EVENT = "join-room-walkie-talkie";
+const AUDIO_MESSAGE_EVENT = "audioMessage";
+const AUDIO_FINAL_EVENT = "audioFinal";
+const USER_OUT_ROOM_EVENT = "user-out-room";
 
 const handleWakieTalkie = (socket, io) => {
-  socket.on("join-room-walkie-talkie", (user, roomId) => {
-    // socket.leaveAll(); // Keluar dari semua room sebelumnya
+  socket.on(JOIN_ROOM_EVENT, (user, roomId) => {
+    try {
+      if (!user || !roomId) {
+        console.error("Invalid user or roomId");
+        return;
+      }
 
-    console.log(`user ${user} masuk kke room ${roomId}`);
+      console.log(`user ${user} masuk ke room ${roomId}`);
 
-    socket.join(roomId);
+      if (!usersInRoom[roomId]) {
+        usersInRoom[roomId] = [];
+      }
+      usersInRoom[roomId].push(user);
 
-    socket.emit("joining", `anda masuk ke room ${roomId}`);
+      console.log(usersInRoom);
 
-    socket.removeAllListeners("audioMessage"); // Menghapus listener sebelumnya
+      socket.join(roomId);
 
-    socket.on("audioMessage", (data) => {
-      // const roomid = data.split("|")[0];
-      // const audio = data.split("|")[1];
+      socket.emit("joining", `anda masuk ke room ${roomId}`);
 
-      //const buff = Buffer.from(data);
+      // Avoid removeAllListeners unless absolutely necessary
 
-      console.log(data);
+      socket.on(AUDIO_MESSAGE_EVENT, (data) => {
+        console.log(data);
+        socket.broadcast.to(roomId).emit(AUDIO_FINAL_EVENT, data);
+      });
 
-      socket.broadcast.to(roomId).emit("audioFinal", data);
-    });
-
-    socket.on("user-out-room", (userOut, idRoom) => {
-      socket.leave(idRoom);
-    });
+      socket.on(USER_OUT_ROOM_EVENT, (userOut, idRoom) => {
+        if (usersInRoom[idRoom]) {
+          usersInRoom[idRoom] = usersInRoom[idRoom].filter(
+            (user) => user !== userOut
+          );
+        }
+        socket.leave(idRoom);
+      });
+    } catch (error) {
+      console.error("Error in handleWakieTalkie:", error);
+    }
   });
 };
 
