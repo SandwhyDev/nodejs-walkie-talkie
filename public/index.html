@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audio Message Client</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- Memuat dari server -->
+    <script defer src="client.js"></script>
+    <!-- Muat client.js setelah halaman dimuat -->
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+  </head>
+  <body>
+    <!-- <h1>Audio Message Client</h1> -->
+    <button id="BtnDisconnect">Disconnected</button>
+    <div id="status">Status: Disconnected</div>
+    <button id="BtnJoinRoom">Join room</button>
+    <button id="BtnLeaveRoom">Leave room</button>
+  </body>
+</html>
