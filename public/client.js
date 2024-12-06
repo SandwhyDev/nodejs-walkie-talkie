@@ -4,6 +4,7 @@ const messagesDiv = document.getElementById("messages");
 const BtnDisconnect = document.getElementById("BtnDisconnect");
 const BtnJoinRoom = document.getElementById("BtnJoinRoom");
 const BtnLeaveRoom = document.getElementById("BtnLeaveRoom");
+const BtnSendNotif = document.getElementById("BtnSendNotif");
 
 // const username = ;
 const socket = io();
@@ -97,4 +98,12 @@ BtnLeaveRoom.addEventListener("click", () => {
   const name = window.localStorage.getItem("name");
 
   socket.emit("user-out-room", name, uid);
+});
+
+BtnSendNotif.addEventListener("click", () => {
+  const uid = window.localStorage.getItem("uid");
+  const name = window.localStorage.getItem("name");
+
+  socket.emit("send-notification", name, uid);
+  socket.emit("send_data", "oit dari client");
 });

@@ -14,8 +14,6 @@ const handleWakieTalkie = (socket, io) => {
     usersInRoom[roomId] = usersInRoom[roomId] || [];
     usersInRoom[roomId].push(user);
 
-    console.log(usersInRoom);
-
     socket.join(roomId);
     socket.emit("joining", `Anda masuk ke room ${roomId}`);
 
